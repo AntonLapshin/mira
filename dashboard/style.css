@@ -1,0 +1,132 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  background: #0e0f13;
+  color: #e6e9ef;
+  padding: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #2a2d35;
+}
+
+header h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #a78bfa;
+}
+
+select {
+  background: #1a1b23;
+  color: #e6e9ef;
+  border: 1px solid #2a2d35;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 12px;
+  max-width: 300px;
+}
+
+.panel {
+  background: #1a1b23;
+  border: 1px solid #2a2d35;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.hidden { display: none; }
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.summary-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+h2 { font-size: 1rem; font-weight: 600; margin-bottom: 0.25rem; }
+h3 { font-size: 0.875rem; font-weight: 600; }
+
+.desc { color: #9ca3af; font-size: 12px; margin-top: 0.25rem; }
+.counts { color: #9ca3af; font-size: 12px; margin-top: 0.5rem; }
+.cycle { color: #9ca3af; font-size: 12px; }
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.badge.planning   { background: #7c3aed22; color: #a78bfa; }
+.badge.building    { background: #f59e0b22; color: #fbbf24; }
+.badge.reviewing   { background: #3b82f622; color: #60a5fa; }
+.badge.complete    { background: #10b98122; color: #34d399; }
+.badge.failed      { background: #ef444422; color: #f87171; }
+.badge.pending     { background: #6b728022; color: #9ca3af; }
+.badge.in-progress { background: #f59e0b22; color: #fbbf24; }
+.badge.done        { background: #10b98122; color: #34d399; }
+.badge.approved    { background: #10b98122; color: #34d399; }
+.badge.revision    { background: #eab30822; color: #fde047; }
+.badge.blocked     { background: #ef444422; color: #f87171; }
+
+.item {
+  background: #1a1b23;
+  border: 1px solid #2a2d35;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.branch {
+  color: #60a5fa;
+  font-size: 11px;
+  margin-top: 0.25rem;
+}
+
+.review-notes {
+  background: #ef444411;
+  border-left: 3px solid #f87171;
+  color: #fca5a5;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  font-size: 12px;
+  border-radius: 0 4px 4px 0;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 11px;
+  color: #9ca3af;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+}
+
+.empty { color: #6b7280; text-align: center; padding: 2rem; }

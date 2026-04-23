@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mira dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>mira</h1>
+    <select id="build-select"></select>
+  </header>
+
+  <section id="empty" class="panel">
+    <p>No builds yet. Run <code>/mira:build</code> to start.</p>
+  </section>
+
+  <section id="summary" class="panel hidden">
+    <div class="summary-row">
+      <div>
+        <h2 id="goal"></h2>
+        <p id="description" class="desc"></p>
+      </div>
+      <div class="summary-badges">
+        <span id="phase" class="badge"></span>
+        <span id="cycle" class="cycle"></span>
+      </div>
+    </div>
+    <p id="counts" class="counts"></p>
+  </section>
+
+  <section id="items"></section>
+
+  <section id="notes-section" class="panel hidden">
+    <h3>Notes</h3>
+    <pre id="notes-body"></pre>
+  </section>
+
+  <section id="logs" class="panel hidden">
+    <h3>Logs</h3>
+    <pre id="logs-body"></pre>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
