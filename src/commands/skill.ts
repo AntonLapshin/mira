@@ -9,7 +9,10 @@ export interface SkillOptions {
   projectRoot?: string;
 }
 
-export async function runSkill(description: string, opts: SkillOptions = {}): Promise<void> {
+export async function runSkill(
+  description: string,
+  opts: SkillOptions = {},
+): Promise<void> {
   const projectRoot = opts.projectRoot ?? process.cwd();
   const config = readConfig(projectRoot);
   const runner = await detectRunner(opts.runner ?? config.runner ?? undefined);
@@ -17,17 +20,34 @@ export async function runSkill(description: string, opts: SkillOptions = {}): Pr
 
   console.log(`Creating skill: ${description}`);
 
-  await spawnPersona("skill-creator", {
-    projectRoot,
-    extraContext: {
-      "Skill topic": description,
-      "Skill slug": slug,
-      "Claude command output": path.join(projectRoot, ".claude", "commands", `${slug}.md`),
-      "OpenCode command output": path.join(projectRoot, ".opencode", "command", `${slug}.md`),
-      "stack.md": path.join(miraRoot(projectRoot), "stack.md"),
-      "project.md": path.join(miraRoot(projectRoot), "project.md"),
+  await spawnPersona(
+    "skill-creator",
+    {
+      projectRoot,
+      extraContext: {
+        "Skill topic": description,
+        "Skill slug": slug,
+        "Claude skill output": path.join(
+          projectRoot,
+          ".claude",
+          "skills",
+          slug,
+          "SKILL.md",
+        ),
+        "OpenCode skill output": path.join(
+          projectRoot,
+          ".opencode",
+          "skills",
+          slug,
+          "SKILL.md",
+        ),
+        "stack.md": path.join(miraRoot(projectRoot), "stack.md"),
+        "project.md": path.join(miraRoot(projectRoot), "project.md"),
+      },
     },
-  }, runner, config);
+    runner,
+    config,
+  );
 
-  console.log(`\nmira skill complete — check .claude/commands/${slug}.md`);
+  console.log(`\nmira skill complete — check .claude/skills/${slug}/SKILL.md`);
 }
