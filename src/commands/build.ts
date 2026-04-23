@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { execa } from "execa";
-import { buildsDir, buildDirName, miraRoot } from "../lib/paths.js";
+import { spawn } from "node:child_process";
+import { buildsDir, buildDirName, packageRoot } from "../lib/paths.js";
 import { readConfig } from "../lib/config.js";
 import { writeSession } from "../lib/session-io.js";
 import { runBuildOrchestrator } from "../lib/orchestrator.js";
@@ -70,20 +70,13 @@ async function ensureDashboard(projectRoot: string, port: number): Promise<void>
     // not running
   }
 
-  const miraCliPath = path.resolve(
-    path.dirname(new URL(import.meta.url).pathname),
-    "..",
-    "..",
-    "cli.js",
-  );
-
-  const child = execa("node", [miraCliPath, "serve", "--project-root", projectRoot, "--port", String(port)], {
+  const cliPath = path.join(packageRoot(), "dist", "cli.js");
+  const child = spawn("node", [cliPath, "serve", "--project-root", projectRoot, "--port", String(port)], {
     detached: true,
     stdio: "ignore",
   });
   child.unref();
 
-  // Wait for it to start
   for (let i = 0; i < 16; i++) {
     await new Promise(r => setTimeout(r, 500));
     try {
