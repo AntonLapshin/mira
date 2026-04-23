@@ -6,7 +6,7 @@ import { detectRunner, type Runner } from "./runner.js";
 import { readSession, writeSession } from "./session-io.js";
 import { spawnPersona } from "./persona.js";
 import { getCurrentBranch, createAndCheckoutBranch, checkoutBranch, mergeBranch, branchExists } from "./git.js";
-import { miraRoot } from "./paths.js";
+import { miraRoot, slugify } from "./paths.js";
 import type { Session, TodoItem } from "./schema.js";
 
 export interface BuildOpts {
@@ -29,8 +29,35 @@ export async function runBuildOrchestrator(
 
   // Phase 1: Planning
   if (session.phase === "planning") {
+    if (session.items.length > 0) {
+      appendLog(sessionDir, "orchestrator", "items already exist — skipping PM");
+    } else {
+      appendLog(sessionDir, "orchestrator", "spawning PM for work breakdown");
+      await spawnPersona("pm", {
+        sessionDir,
+        projectRoot,
+        extraContext: {
+          "Build description": session.description,
+          "project.md": path.join(mira, "project.md"),
+          "stack.md": path.join(mira, "stack.md"),
+          "features.md": path.join(mira, "features.md"),
+          "Features directory": path.join(mira, "features"),
+          "Guidelines directory": path.join(mira, "guidelines"),
+        },
+      }, runner, config);
+
+      session = readSession(sessionDir);
+      if (session.items.length === 0) {
+        session.phase = "failed";
+        appendLog(sessionDir, "orchestrator", "PM produced no items; marking failed");
+        writeSession(sessionDir, session);
+        return session;
+      }
+    }
+
     const originalBranch = await getCurrentBranch(projectRoot);
-    const featureBranch = `mira/${session.id}/base`;
+    const branchSlug = slugify(session.title || session.description).slice(0, 40);
+    const featureBranch = `mira/${branchSlug}`;
 
     if (await branchExists(projectRoot, featureBranch)) {
       await checkoutBranch(projectRoot, featureBranch);
@@ -39,32 +66,9 @@ export async function runBuildOrchestrator(
     }
 
     session.baseBranch = featureBranch;
-    writeSession(sessionDir, session);
-
-    appendLog(sessionDir, "orchestrator", `created feature branch ${featureBranch}`);
-    appendLog(sessionDir, "orchestrator", "spawning PM for work breakdown");
-    await spawnPersona("pm", {
-      sessionDir,
-      projectRoot,
-      extraContext: {
-        "Build description": session.description,
-        "project.md": path.join(mira, "project.md"),
-        "stack.md": path.join(mira, "stack.md"),
-        "features.md": path.join(mira, "features.md"),
-        "Features directory": path.join(mira, "features"),
-        "Guidelines directory": path.join(mira, "guidelines"),
-      },
-    }, runner, config);
-
-    session = readSession(sessionDir);
-    if (session.items.length === 0) {
-      session.phase = "failed";
-      appendLog(sessionDir, "orchestrator", "PM produced no items; marking failed");
-      writeSession(sessionDir, session);
-      return session;
-    }
     session.phase = "building";
     writeSession(sessionDir, session);
+    appendLog(sessionDir, "orchestrator", `created feature branch ${featureBranch}`);
   }
 
   // Phase 2-3 loop: Build -> Review
@@ -83,7 +87,7 @@ export async function runBuildOrchestrator(
       extraContext: {
         "Base branch": session.baseBranch,
         "Build description": session.description,
-        "notes.md": path.join(sessionDir, "notes.md"),
+        "reflections.md": path.join(sessionDir, "reflections.md"),
       },
     }, runner, config);
 
@@ -159,7 +163,7 @@ async function runBuildPhase(
         "Item description": item.description,
         "Item branch": branchName,
         "Base branch": session.baseBranch,
-        "notes.md": path.join(sessionDir, "notes.md"),
+        "reflections.md": path.join(sessionDir, "reflections.md"),
         "Guidelines directory": path.join(miraRoot(projectRoot), "guidelines"),
       },
     }, runner, config);

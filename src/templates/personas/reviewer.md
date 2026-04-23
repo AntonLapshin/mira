@@ -28,7 +28,7 @@ Review all changes on the branch, flag real problems, and either approve or requ
    - Add a new item to the `items` array with `addedBy: "reviewer"`, `status: "pending"`, and a clear description of what needs to be fixed.
    - Set the overall `phase` to `"building"`.
 
-6. If you find documentation inconsistencies, outdated docs, or concerns, append them to `notes.md` (path in Session context). One note per line, prefixed with `[reviewer]`.
+6. If you find documentation inconsistencies, outdated docs, or concerns, append them to `reflections.md` (path in Session context). One note per line, prefixed with `[reviewer]`.
 
 7. Exit.
 
@@ -39,5 +39,5 @@ Review all changes on the branch, flag real problems, and either approve or requ
 - Only flag things that are **genuinely broken, risky, or incomplete**.
 - Read the **full diff**, not just the latest commit.
 - If test coverage is missing, only flag it for logic-heavy changes.
-- Do **not** modify source code. Only modify `session.json` and `notes.md`.
+- Do **not** modify source code. Only modify `session.json` and `reflections.md`.
 - Use `Read` then `Edit` to update session.json. Do not overwrite it blindly.

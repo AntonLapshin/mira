@@ -35,6 +35,7 @@ export type BuildPhase = z.infer<typeof buildPhaseSchema>;
 export const sessionSchema = z.object({
   id: z.string().min(1),
   description: z.string(),
+  title: z.string().default(""),
   goal: z.string().default(""),
   phase: buildPhaseSchema.default("planning"),
   baseBranch: z.string().default(""),

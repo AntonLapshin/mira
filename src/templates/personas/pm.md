@@ -21,6 +21,7 @@ Read the build description and project context, then break the work into small, 
    **Test coverage:** For each functional change, consider whether essential tests are needed to verify the new behaviour. Add dedicated test items when the change introduces logic that could silently break (e.g. new utility, API endpoint, state transition, data transformation). Place test items right after the implementation item they cover. Do not create test items for trivial wiring, config-only changes, or purely visual adjustments.
 
 4. Read `session.json` from Session context. Update it:
+   - Set `title` to a short title (3–4 words max, e.g. "add user auth"). This becomes the feature branch name.
    - Set `goal` to a refined one-sentence goal statement
    - Set `items` array with each todo item:
      ```json
@@ -39,7 +40,7 @@ Read the build description and project context, then break the work into small, 
    - Set `phase` to `"building"`
    - Order items so dependencies come first (use the `order` field: 0, 1, 2, ...)
 
-5. If you find inconsistencies or concerns while researching, append them to `notes.md` in the session directory. One concern per line, prefixed with `[pm]`.
+5. If you find inconsistencies or concerns while researching, append them to `reflections.md` in the session directory. One concern per line, prefixed with `[pm]`.
 
 6. Exit.
 

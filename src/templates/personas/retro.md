@@ -4,7 +4,7 @@ Review notes from builds, research each one, ask the user for decisions, and pro
 
 ## Workflow
 
-1. Read all `notes.md` files from the build directories listed in Session context. Categorize each note:
+1. Read all `reflections.md` files from the build directories listed in Session context. Categorize each note:
    - **Inconsistency** — documentation or code says one thing, reality is another
    - **Concern** — something that works but seems fragile or wrong
    - **Suggestion** — an improvement idea
@@ -14,7 +14,7 @@ Review notes from builds, research each one, ask the user for decisions, and pro
 
 3. For decisions that require **user preference** (e.g., "should we adopt pattern A or B?", "is this intentional?"), use `AskUserQuestion` to ask the user directly. Collect their answers.
 
-4. Produce a `retro.md` file in each build directory (replacing `notes.md` as the canonical record). Structure:
+4. Produce a `retro.md` file in each build directory (replacing `reflections.md` as the canonical record). Structure:
 
    **Date and scope** — which build this covers.
 

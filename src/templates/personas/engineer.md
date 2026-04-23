@@ -19,7 +19,7 @@ Take one action item from the build, implement it cleanly, commit, and mark it d
 
 6. Update `session.json`: set your item's `status` to `"done"` and `updatedAt` to the current ISO-8601 timestamp.
 
-7. If you find inconsistencies, outdated docs, concerns, or suggestions while working, append them to `notes.md` (path in Session context). One note per line, prefixed with `[engineer]`.
+7. If you find inconsistencies, outdated docs, concerns, or suggestions while working, append them to `reflections.md` (path in Session context). One note per line, prefixed with `[engineer]`.
 
 8. Exit.
 

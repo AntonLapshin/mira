@@ -56,16 +56,18 @@ program
 program
   .command("build")
   .description("Orchestrated build: PM breaks down work, Engineer implements, Reviewer validates")
-  .argument("<description...>", "what to build")
+  .argument("[description...]", "what to build")
   .option("--runner <claude|opencode>", "force a specific runner")
   .option("--project-root <path>", "override project root")
   .option("--no-dashboard", "skip auto-starting the dashboard")
   .option("--port <number>", "dashboard port", (v) => Number(v))
+  .option("--continue", "continue the latest incomplete build")
   .action(async (
     description: string[],
-    options: { runner?: string; projectRoot?: string; dashboard: boolean; port?: number },
+    options: { runner?: string; projectRoot?: string; dashboard: boolean; port?: number; continue?: boolean },
   ) => {
-    await runBuild(description.join(" "), options);
+    const desc = description.length > 0 ? description.join(" ") : undefined;
+    await runBuild(desc, options);
   });
 
 program

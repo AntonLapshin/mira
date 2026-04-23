@@ -12,39 +12,57 @@ export interface BuildOptions {
   projectRoot?: string;
   dashboard?: boolean;
   port?: number;
+  continue?: boolean;
 }
 
-export async function runBuild(description: string, opts: BuildOptions = {}): Promise<void> {
+export async function runBuild(description: string | undefined, opts: BuildOptions = {}): Promise<void> {
   const projectRoot = opts.projectRoot ?? process.cwd();
   const config = readConfig(projectRoot);
   const port = opts.port ?? config.dashboardPort;
 
-  const dirName = buildDirName(description);
-  const sessionDir = path.join(buildsDir(projectRoot), dirName);
-  fs.mkdirSync(sessionDir, { recursive: true });
+  let sessionDir: string;
 
-  const sessionFile = path.join(sessionDir, "session.json");
-  if (!fs.existsSync(sessionFile)) {
-    const session: Session = {
-      id: dirName,
-      description,
-      goal: "",
-      phase: "planning",
-      baseBranch: "",
-      items: [],
-      buildCycles: 0,
-      maxCycles: config.maxBuildCycles,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    writeSession(sessionDir, session);
+  if (opts.continue) {
+    const found = findLatestIncompleteSession(projectRoot);
+    if (!found) {
+      console.log("No incomplete build found. Start a new build with: mira build <description>");
+      return;
+    }
+    sessionDir = found;
+  } else {
+    if (!description) {
+      console.error("Description required. Usage: mira build <description>");
+      process.exit(1);
+    }
+    const dirName = buildDirName(description);
+    sessionDir = path.join(buildsDir(projectRoot), dirName);
+    fs.mkdirSync(sessionDir, { recursive: true });
+
+    const sessionFile = path.join(sessionDir, "session.json");
+    if (!fs.existsSync(sessionFile)) {
+      const session: Session = {
+        id: dirName,
+        description,
+        title: "",
+        goal: "",
+        phase: "planning",
+        baseBranch: "",
+        items: [],
+        buildCycles: 0,
+        maxCycles: config.maxBuildCycles,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      writeSession(sessionDir, session);
+    }
   }
 
   if (opts.dashboard !== false) {
     await ensureDashboard(projectRoot, port);
   }
 
-  console.log(`Build: ${description}`);
+  const currentSession = JSON.parse(fs.readFileSync(path.join(sessionDir, "session.json"), "utf8"));
+  console.log(`Build: ${currentSession.description}`);
   console.log(`Session: ${sessionDir}`);
   console.log(`Dashboard: http://localhost:${port}`);
 
@@ -59,6 +77,32 @@ export async function runBuild(description: string, opts: BuildOptions = {}): Pr
   console.log(
     `\nmira build ${result.phase} — ${approved} approved, ${done} done, ${blocked} blocked (${result.buildCycles} cycles)`,
   );
+}
+
+function findLatestIncompleteSession(projectRoot: string): string | null {
+  const builds = buildsDir(projectRoot);
+  if (!fs.existsSync(builds)) return null;
+
+  const dirs = fs.readdirSync(builds, { withFileTypes: true })
+    .filter(d => d.isDirectory())
+    .map(d => d.name)
+    .sort()
+    .reverse();
+
+  for (const dir of dirs) {
+    const sessionFile = path.join(builds, dir, "session.json");
+    if (fs.existsSync(sessionFile)) {
+      try {
+        const session = JSON.parse(fs.readFileSync(sessionFile, "utf8"));
+        if (session.phase !== "complete" && session.phase !== "failed") {
+          return path.join(builds, dir);
+        }
+      } catch {
+        // skip corrupt session files
+      }
+    }
+  }
+  return null;
 }
 
 async function ensureDashboard(projectRoot: string, port: number): Promise<void> {

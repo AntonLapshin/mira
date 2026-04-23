@@ -53,7 +53,7 @@
   async function loadSession(relPath) {
     const sessionUrl = `${relPath}/session.json?_=${Date.now()}`;
     const logsUrl = `${relPath}/logs.jsonl?_=${Date.now()}`;
-    const notesUrl = `${relPath}/notes.md?_=${Date.now()}`;
+    const notesUrl = `${relPath}/reflections.md?_=${Date.now()}`;
 
     try {
       const [sr, lr, nr] = await Promise.all([

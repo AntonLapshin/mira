@@ -24,7 +24,7 @@ export async function runRetro(opts: RetroOptions = {}): Promise<void> {
   const buildDirs = fs.readdirSync(builds, { withFileTypes: true })
     .filter(d => d.isDirectory())
     .map(d => path.join(builds, d.name))
-    .filter(d => fs.existsSync(path.join(d, "notes.md")));
+    .filter(d => fs.existsSync(path.join(d, "reflections.md")));
 
   if (buildDirs.length === 0) {
     console.log("No build notes found. Nothing to retro.");
