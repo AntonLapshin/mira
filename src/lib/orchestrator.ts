@@ -29,9 +29,19 @@ export async function runBuildOrchestrator(
 
   // Phase 1: Planning
   if (session.phase === "planning") {
-    session.baseBranch = await getCurrentBranch(projectRoot);
+    const originalBranch = await getCurrentBranch(projectRoot);
+    const featureBranch = `mira/${session.id}/base`;
+
+    if (await branchExists(projectRoot, featureBranch)) {
+      await checkoutBranch(projectRoot, featureBranch);
+    } else {
+      await createAndCheckoutBranch(projectRoot, featureBranch, originalBranch);
+    }
+
+    session.baseBranch = featureBranch;
     writeSession(sessionDir, session);
 
+    appendLog(sessionDir, "orchestrator", `created feature branch ${featureBranch}`);
     appendLog(sessionDir, "orchestrator", "spawning PM for work breakdown");
     await spawnPersona("pm", {
       sessionDir,
@@ -100,6 +110,10 @@ export async function runBuildOrchestrator(
     appendLog(sessionDir, "orchestrator", `hit max build cycles (${session.maxCycles})`);
     writeSession(sessionDir, session);
   }
+
+  // Stay on the feature branch so the user can create a PR manually
+  await checkoutBranch(projectRoot, session.baseBranch);
+  appendLog(sessionDir, "orchestrator", `checked out ${session.baseBranch} — create a PR when ready`);
 
   return session;
 }

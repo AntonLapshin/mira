@@ -18,6 +18,8 @@ Read the build description and project context, then break the work into small, 
    - Have a clear, verifiable "done" condition
    - Be independent or have explicit ordering
 
+   **Test coverage:** For each functional change, consider whether essential tests are needed to verify the new behaviour. Add dedicated test items when the change introduces logic that could silently break (e.g. new utility, API endpoint, state transition, data transformation). Place test items right after the implementation item they cover. Do not create test items for trivial wiring, config-only changes, or purely visual adjustments.
+
 4. Read `session.json` from Session context. Update it:
    - Set `goal` to a refined one-sentence goal statement
    - Set `items` array with each todo item:
