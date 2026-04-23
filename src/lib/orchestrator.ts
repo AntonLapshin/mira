@@ -6,7 +6,7 @@ import { detectRunner, type Runner } from "./runner.js";
 import { readSession, writeSession } from "./session-io.js";
 import { spawnPersona } from "./persona.js";
 import { getCurrentBranch, createAndCheckoutBranch, checkoutBranch, mergeBranch, branchExists } from "./git.js";
-import { miraRoot, slugify } from "./paths.js";
+import { slugify } from "./paths.js";
 import type { Session, TodoItem } from "./schema.js";
 
 export interface BuildOpts {
@@ -25,7 +25,6 @@ export async function runBuildOrchestrator(
   appendLog(sessionDir, "orchestrator", `starting (runner=${runner})`);
 
   let session = readSession(sessionDir);
-  const mira = miraRoot(projectRoot);
 
   // Phase 1: Planning
   if (session.phase === "planning") {
@@ -38,11 +37,6 @@ export async function runBuildOrchestrator(
         projectRoot,
         extraContext: {
           "Build description": session.description,
-          "project.md": path.join(mira, "project.md"),
-          "stack.md": path.join(mira, "stack.md"),
-          "features.md": path.join(mira, "features.md"),
-          "Features directory": path.join(mira, "features"),
-          "Guidelines directory": path.join(mira, "guidelines"),
         },
       }, runner, config);
 
@@ -87,7 +81,6 @@ export async function runBuildOrchestrator(
       extraContext: {
         "Base branch": session.baseBranch,
         "Build description": session.description,
-        "reflections.md": path.join(sessionDir, "reflections.md"),
       },
     }, runner, config);
 
@@ -163,8 +156,6 @@ async function runBuildPhase(
         "Item description": item.description,
         "Item branch": branchName,
         "Base branch": session.baseBranch,
-        "reflections.md": path.join(sessionDir, "reflections.md"),
-        "Guidelines directory": path.join(miraRoot(projectRoot), "guidelines"),
       },
     }, runner, config);
 

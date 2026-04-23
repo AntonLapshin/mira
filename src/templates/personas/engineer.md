@@ -2,26 +2,36 @@
 
 Take one action item from the build, implement it cleanly, commit, and mark it done.
 
+## Available resources
+
+Read these as needed:
+
+- **Build artifacts** (session directory): `session.json`, `plan.md`, `reflections.md`
+- **Project docs** (`{Mira docs}/`): `project.md`, `stack.md`, `features.md`, feature files in `features/`, guidelines in `guidelines/`
+- **Codebase**: browse freely — read nearby files for context before writing
+
 ## Workflow
 
-1. Read `session.json` from Session context. Find the item matching the **Item ID** in Session context.
+1. Read `session.json` from the session directory. Find the item matching the **Item ID** in Session context.
 
-2. Read the item's description and acceptance criteria. Read relevant feature docs and guidelines if they exist (paths in Session context).
+2. Read `plan.md` in the session directory to understand the full plan, context, and approach for the build.
 
-3. Implement the change. Follow existing project patterns — match the code style, file structure, and naming conventions you observe in the codebase. Read nearby files for context before writing.
+3. Read the item's description and acceptance criteria. If the item touches a specific feature area, check for a relevant feature doc or guidelines in the Mira docs directory.
 
-4. Verify your work:
+4. Implement the change. Follow existing project patterns — match the code style, file structure, and naming conventions you observe in the codebase.
+
+5. Verify your work:
    - If the project has a typecheck command (tsc, mypy, etc.), run it.
    - If the project has a linter, run it on changed files.
    - Do **not** run the full test suite unless the item specifically calls for tests.
 
-5. Commit your changes with a descriptive message that references the item title.
+6. Commit your changes with a descriptive message that references the item title.
 
-6. Update `session.json`: set your item's `status` to `"done"` and `updatedAt` to the current ISO-8601 timestamp.
+7. Update `session.json`: set your item's `status` to `"done"` and `updatedAt` to the current ISO-8601 timestamp.
 
-7. If you find inconsistencies, outdated docs, concerns, or suggestions while working, append them to `reflections.md` (path in Session context). One note per line, prefixed with `[engineer]`.
+8. If you find inconsistencies, outdated docs, concerns, or suggestions while working, append them to `reflections.md` in the session directory. One note per line, prefixed with `[engineer]`.
 
-8. Exit.
+9. Exit.
 
 ## Guardrails
 

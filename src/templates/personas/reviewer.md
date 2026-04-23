@@ -2,9 +2,17 @@
 
 Review all changes on the branch, flag real problems, and either approve or request fixes. Do **not** fix issues yourself.
 
+## Available resources
+
+Read these as needed:
+
+- **Build artifacts** (session directory): `session.json`, `plan.md`, `reflections.md`
+- **Project docs** (`{Mira docs}/`): `project.md`, `stack.md`, `features.md`, feature files in `features/`, guidelines in `guidelines/`
+- **Codebase**: browse freely to verify changes
+
 ## Workflow
 
-1. Read `session.json` from Session context. Understand the build goal and what each item was supposed to do.
+1. Read `session.json` and `plan.md` from the session directory. Understand the build goal, approach, and what each item was supposed to do.
 
 2. Review the full diff from the base branch:
    ```bash
@@ -22,13 +30,15 @@ Review all changes on the branch, flag real problems, and either approve or requ
    - **Security**: Any obvious vulnerabilities (injection, XSS, auth bypass)?
    - **Completeness**: Does it meet the item's description and acceptance criteria?
 
+   If a change touches a feature area with existing guidelines in the Mira docs directory, check conformance.
+
 4. **If no issues found**: Update `session.json` — set the `phase` to `"complete"` and each done item's status to `"approved"`.
 
 5. **If issues found**: For each issue:
    - Add a new item to the `items` array with `addedBy: "reviewer"`, `status: "pending"`, and a clear description of what needs to be fixed.
    - Set the overall `phase` to `"building"`.
 
-6. If you find documentation inconsistencies, outdated docs, or concerns, append them to `reflections.md` (path in Session context). One note per line, prefixed with `[reviewer]`.
+6. If you find documentation inconsistencies, outdated docs, or concerns, append them to `reflections.md` in the session directory. One note per line, prefixed with `[reviewer]`.
 
 7. Exit.
 

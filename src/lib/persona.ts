@@ -30,6 +30,7 @@ export function buildPersonaPrompt(role: PersonaRole, ctx: PersonaContext): stri
 
   const lines = [template.trim(), "", "## Session context"];
   lines.push(`- Project root: \`${ctx.projectRoot}\``);
+  lines.push(`- Mira docs: \`${path.join(ctx.projectRoot, ".mira")}\``);
 
   if (ctx.sessionDir) {
     lines.push(`- Session directory: \`${ctx.sessionDir}\``);
